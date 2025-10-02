@@ -1,14 +1,60 @@
-##Spring Configuration
 server:
-  port: 8080
+  port: 8084
 spring:
   application:
-    name: ms-reporte
+    name: "ms-reporte"
   devtools:
     add-properties: false
   h2:
     console:
       enabled: true
-      path: /h2
+      path: "/h2"
   profiles:
-    include:
+    include: null
+  data:
+    mongodb:
+      uri: "${MONGO_URL}"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    circuitbreakers:
+      enabled: true
+cors:
+  allowed-origins: "${CORS_ALLOWED_ORIGINS}"
+adapter:
+  capacity:
+    restconsumer:
+      timeout: 5000
+      url: "${MS_REPORT_CAPACITY_REST_CONSUMER_URL}"
+  people:
+    restconsumer:
+      timeout: 5000
+      url: "${MS_REPORT_PEOPLE_REST_CONSUMER_URL}"
+resilience4j:
+  circuitbreaker:
+    instances:
+      testGet:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: "2s"
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 10
+        waitDurationInOpenState: "10s"
+      testPost:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: "2s"
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 10
+        waitDurationInOpenState: "10s"
