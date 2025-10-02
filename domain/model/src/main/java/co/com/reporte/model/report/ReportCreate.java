@@ -1,5 +1,6 @@
 package co.com.reporte.model.report;
 
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,6 @@ public class ReportCreate {
   private String idBootcamp;
   private String name;
   private String description;
-  private String releaseDate;
+  private LocalDate releaseDate;
   private Integer duration;
 }
