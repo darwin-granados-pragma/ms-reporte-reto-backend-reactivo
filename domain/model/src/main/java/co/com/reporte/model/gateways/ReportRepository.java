@@ -6,4 +6,8 @@ import reactor.core.publisher.Mono;
 public interface ReportRepository {
 
   Mono<Report> save(Report report);
+
+  Mono<Report> findTopByOrderByTotalPeopleDesc();
+
+  Mono<Report> findByIdBootcamp(String idBootcamp);
 }
