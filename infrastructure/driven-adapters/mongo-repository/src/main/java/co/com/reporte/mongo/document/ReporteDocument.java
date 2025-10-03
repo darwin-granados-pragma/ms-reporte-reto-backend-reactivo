@@ -1,5 +1,6 @@
 package co.com.reporte.mongo.document;
 
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,7 +31,7 @@ public class ReporteDocument {
   private String description;
 
   @Field("fecha_lanzamiento")
-  private String releaseDate;
+  private LocalDate releaseDate;
 
   @Field("duracion")
   private Integer duration;

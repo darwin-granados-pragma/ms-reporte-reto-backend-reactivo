@@ -1,7 +1,9 @@
 package co.com.reporte.consumer.rest;
 
 import co.com.reporte.consumer.mapper.CapacityMapper;
-import co.com.reporte.consumer.model.CapacityRestResponse;
+import co.com.reporte.consumer.model.CapacityConsumerResponse;
+import co.com.reporte.consumer.model.CapacityTechTotalRestResponse;
+import co.com.reporte.model.capacity.CapacityDomainResponse;
 import co.com.reporte.model.capacity.CapacityTechnologyTotal;
 import co.com.reporte.model.error.ErrorCode;
 import co.com.reporte.model.exception.ObjectNotFoundException;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -33,11 +36,28 @@ public class CapacityRestConsumer implements CapacityGateway {
         .get()
         .uri("/api/v1/bootcamp/{id}/count", idBootcamp)
         .retrieve()
-        .bodyToMono(CapacityRestResponse.class)
+        .bodyToMono(CapacityTechTotalRestResponse.class)
         .map(capacityMapper::toDomain)
         .onErrorResume(WebClientResponseException.NotFound.class, ex -> {
               log.warn("Bootcamp not found by id={}. The endpoint returned 404.", idBootcamp);
               return Mono.error(new ObjectNotFoundException(ErrorCode.BOOTCAMP_NOT_FOUND, idBootcamp));
+            }
+        );
+  }
+
+  @Override
+  public Flux<CapacityDomainResponse> getCapacitiesByIdBootcamp(String idBootcamp) {
+    return client
+        .get()
+        .uri("/api/v1/bootcamp/{idBootcamp}/capacities", idBootcamp)
+        .retrieve()
+        .bodyToFlux(CapacityConsumerResponse.class)
+        .map(capacityMapper::toCapacityResponse)
+        .onErrorResume(WebClientResponseException.NotFound.class, ex -> {
+              log.warn("Capacity list not found for idBootcamp={}. The endpoint returned 404.",
+                  idBootcamp
+              );
+              return Flux.empty();
             }
         );
   }

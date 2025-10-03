@@ -1,4 +1,4 @@
-package co.com.reporte.consumer.model;
+package co.com.reporte.api.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class CapacityRestResponse {
+public class TechnologyRestResponse {
 
-  private Long totalCapacity;
-  private Long totalTechnology;
+  private String id;
+  private String name;
 }
